@@ -1,0 +1,124 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<UseWPF>true</UseWPF>
+		<LangVersion>latest</LangVersion>
+		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+		<Platforms>x64</Platforms>
+		<TargetFramework>net472</TargetFramework>
+		<Configurations>
+			RVT2016_Debug;RVT2017_Debug;RVT2018_Debug;RVT2019_Debug;RVT2020_Debug;RVT2021_Debug;RVT2022_Debug;RVT2023_Debug;RVT2024_Debug;
+			RVT2016_Release;RVT2017_Release;RVT2018_Release;RVT2019_Release;RVT2020_Release;RVT2021_Release;RVT2022_Release;RVT2023_Release;RVT2024_Release;
+		</Configurations>
+	</PropertyGroup>
+	<!-- 下列信息需要根据项目实际情况修改-->
+	<PropertyGroup>
+		<Company>ZhanHuajie</Company>
+		<Description>Revit数据访问工具集</Description>
+		<Authors>ZhanHuajie</Authors>
+		<RevitVersion>2020</RevitVersion>
+		<AddinVersion>1.0</AddinVersion>
+		<RootNamespace>Revit.DataAccessor</RootNamespace>
+	</PropertyGroup>
+	<!--/////////////////////////////////-->
+
+	<PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+		<DebugType>full</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<SharingType>Local</SharingType>
+		<DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.Contains('Release'))">
+		<Optimize>true</Optimize>
+		<DebugType>none</DebugType>
+		<SharingType>Publish</SharingType>
+		<DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.Contains('RVT2016'))">
+		<TargetFramework>net452</TargetFramework>
+		<RevitVersion>2016</RevitVersion>
+		<DefineConstants>$(DefineConstants);RVT2016</DefineConstants>
+		<DefineConstants>$(DefineConstants);RVT2016_OR_GREATER</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.Contains('RVT2017'))">
+		<TargetFramework>net46</TargetFramework>
+		<RevitVersion>2017</RevitVersion>
+		<DefineConstants>$(DefineConstants);RVT2017</DefineConstants>
+		<DefineConstants>$(DefineConstants);RVT2016_OR_GREATER;RVT2017_OR_GREATER</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.Contains('RVT2018'))">
+		<TargetFramework>net462</TargetFramework>
+		<RevitVersion>2018</RevitVersion>
+		<DefineConstants>$(DefineConstants);RVT2018</DefineConstants>
+		<DefineConstants>$(DefineConstants);RVT2016_OR_GREATER;RVT2017_OR_GREATER;RVT2018_OR_GREATER</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.Contains('RVT2019'))">
+		<TargetFramework>net47</TargetFramework>
+		<RevitVersion>2019</RevitVersion>
+		<DefineConstants>$(DefineConstants);RVT2019</DefineConstants>
+		<DefineConstants>
+			$(DefineConstants);RVT2016_OR_GREATER;RVT2017_OR_GREATER;RVT2018_OR_GREATER;RVT2019_OR_GREATER
+		</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.Contains('RVT2020'))">
+		<TargetFramework>net472</TargetFramework>
+		<RevitVersion>2020</RevitVersion>
+		<DefineConstants>$(DefineConstants);RVT2020</DefineConstants>
+		<DefineConstants>
+			$(DefineConstants);RVT2016_OR_GREATER;RVT2017_OR_GREATER;RVT2018_OR_GREATER;RVT2019_OR_GREATER;RVT2020_OR_GREATER
+		</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.Contains('RVT2021'))">
+		<TargetFramework>net48</TargetFramework>
+		<RevitVersion>2021</RevitVersion>
+		<DefineConstants>$(DefineConstants);RVT2021</DefineConstants>
+		<DefineConstants>
+			$(DefineConstants);RVT2016_OR_GREATER;RVT2017_OR_GREATER;RVT2018_OR_GREATER;RVT2019_OR_GREATER;RVT2020_OR_GREATER;RVT2021_OR_GREATER
+		</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.Contains('RVT2022'))">
+		<TargetFramework>net48</TargetFramework>
+		<RevitVersion>2022</RevitVersion>
+		<DefineConstants>$(DefineConstants);RVT2022</DefineConstants>
+		<DefineConstants>
+			$(DefineConstants);RVT2016_OR_GREATER;RVT2017_OR_GREATER;RVT2018_OR_GREATER;RVT2019_OR_GREATER;RVT2020_OR_GREATER;RVT2021_OR_GREATER;RVT2022_OR_GREATER
+		</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.Contains('RVT2023'))">
+		<TargetFramework>net48</TargetFramework>
+		<RevitVersion>2023</RevitVersion>
+		<DefineConstants>$(DefineConstants);RVT2023</DefineConstants>
+		<DefineConstants>
+			$(DefineConstants);RVT2016_OR_GREATER;RVT2017_OR_GREATER;RVT2018_OR_GREATER;RVT2019_OR_GREATER;RVT2020_OR_GREATER;RVT2021_OR_GREATER;RVT2022_OR_GREATER;RVT2023_OR_GREATER
+		</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="$(Configuration.Contains('RVT2024'))">
+		<TargetFramework>net48</TargetFramework>
+		<RevitVersion>2024</RevitVersion>
+		<DefineConstants>$(DefineConstants);RVT2024</DefineConstants>
+		<DefineConstants>
+			$(DefineConstants);RVT2016_OR_GREATER;RVT2017_OR_GREATER;RVT2018_OR_GREATER;RVT2019_OR_GREATER;RVT2020_OR_GREATER;RVT2021_OR_GREATER;RVT2022_OR_GREATER;RVT2023_OR_GREATER;RVT2024_OR_GREATER
+		</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup>
+		<Version>$(AddinVersion)</Version>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="$(RevitVersion).*">
+			<ExcludeAssets>runtime</ExcludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<Using Include="Autodesk.Revit.DB" />
+		<Using Include="Autodesk.Revit.UI" />
+		<Using Include="System" />
+		<Using Include="System.Collections.Generic" />
+		<Using Include="System.Linq" />
+		<Using Include="System.Net" />
+		<Using Include="System.IO" />
+		<Using Include="System.Text" />
+	</ItemGroup>
+</Project>
