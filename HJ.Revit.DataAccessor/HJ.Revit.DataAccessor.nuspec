@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>HJ.Revit.DataAccessor</id>
+    <version>1.0.1</version>
+    <title>HJ.Revit.DataAccessor</title>
+    <authors>ZhanHuajie</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <!-- <icon>icon.png</icon> -->
+    <projectUrl>https://github.com/zhanhuajie/HJ.Revit.DataAccessor</projectUrl>
+    <description>Revit数据存储工具</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>ZhanHuajie</copyright>
+    <tags>Revit DataStorge</tags>
+    <dependencies></dependencies>
+  </metadata>
+  <files>
+    <file src=".\bin\x64\RVT2016_Release\HJ.Revit.DataAccessor.dll" target="lib\HJ.Revit.DataAccessor.dll" />
+  </files>
+</package>

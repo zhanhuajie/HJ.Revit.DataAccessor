@@ -17,7 +17,7 @@
 		<Description>Revit数据访问工具集</Description>
 		<Authors>ZhanHuajie</Authors>
 		<RevitVersion>2020</RevitVersion>
-		<AddinVersion>1.0</AddinVersion>
+		<AddinVersion>1.0.1</AddinVersion>
 		<RootNamespace>Revit.DataAccessor</RootNamespace>
 	</PropertyGroup>
 	<!--/////////////////////////////////-->
@@ -103,7 +103,8 @@
 	<PropertyGroup>
 		<Version>$(AddinVersion)</Version>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<PackageProjectUrl>https://github.com/zhanhuajie/HJ.Revit.DataAccessor</PackageProjectUrl>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
