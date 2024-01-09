@@ -1,10 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
-
-namespace HJ.Revit
+﻿namespace HJ.Revit
 {
     public interface IJsonDataService
     {
-        JObject GetJsonData(Element elem);
-        void SetJsonData(Element elem, JObject jObject);
+        string GetJsonData(Element elem);
+        void SetJsonData(Element elem, string json);
     }
 }

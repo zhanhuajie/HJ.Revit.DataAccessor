@@ -51,7 +51,7 @@ namespace HJ.Revit
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
-        public JObject GetJsonData(Element elem)
+        public string GetJsonData(Element elem)
         {
             // Check arguments
             _ = elem ?? throw new ArgumentNullException(nameof(elem));
@@ -66,19 +66,25 @@ namespace HJ.Revit
             // Get json data
             try
             {
-                return JObject.Parse(entity.Get<string>("Data"));
+                return entity.Get<string>("Data");
             }
             catch
             {
                 return null;
             }
         }
-        public void SetJsonData(Element elem, JObject jObject)
+        public void SetJsonData(Element elem, string json)
         {
-            //参数验证
             _ = elem ?? throw new ArgumentNullException(nameof(elem));
-            _ = jObject ?? throw new ArgumentNullException(nameof(jObject));
-            // ------------------------------
+            JObject jObject;
+            try
+            {
+                jObject = JObject.Parse(json);
+            }
+            catch
+            {
+                throw new ArgumentException("JsonData is not valid");
+            }
 
             // 标记UniqueId
             if (jObject["UniqueId"] == null)

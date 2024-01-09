@@ -10,12 +10,6 @@ namespace HJ.Revit
         private static readonly Dictionary<Guid, Dictionary<string, object>> _globalStorage = new();
         private static readonly Dictionary<Guid, int> _counter = new();
 
-        private static Guid GetGuid(Element elem)
-        {
-            var g1 = new Guid(MD5Helper.GetMD5Hash(elem.Document.GetHashCode().ToString()));
-            var g2 = new Guid(MD5Helper.GetMD5Hash(elem.UniqueId));
-            return g1.Xor(g2);
-        }
         private readonly Guid _guid;
         readonly Document _document;
         readonly ElementId _elementId;
@@ -34,13 +28,13 @@ namespace HJ.Revit
         }
         public bool AutoSave { get; set; } = false;
         protected virtual IJsonDataService DataService { get; } = new EntityDataService();
-        protected virtual JsonSerializer Serializer => JsonSerializer.CreateDefault();
+        protected virtual JsonSerializer Serializer { get; } = JsonSerializer.CreateDefault();
 
         protected DataAccessorBase(Element elem)
         {
             _document = elem?.Document ?? throw new ArgumentNullException(nameof(elem));
             _elementId = elem.Id;
-            _guid = GetGuid(elem).Xor(this.GetType().GUID);
+            _guid = elem.GetGuid().Xor(this.GetType().GUID);
             if (_counter.TryGetValue(_guid, out var count))
             {
                 _counter[_guid] = count + 1;
@@ -73,14 +67,22 @@ namespace HJ.Revit
         }
         public void Save()
         {
-            var jsonData = DataService.GetJsonData(Element) ?? new();
+            JObject jsonData;
+            try
+            {
+                jsonData = JObject.Parse(DataService.GetJsonData(Element));
+            }
+            catch
+            {
+                jsonData = new();
+            }
             var jObject = jsonData[this.GetType().FullName] as JObject ?? new();
             foreach (var key in Storage.Keys)
             {
                 jObject[key] = Storage[key] == null ? null : JToken.FromObject(Storage[key], Serializer ?? JsonSerializer.CreateDefault());
             }
             jsonData[this.GetType().FullName] = jObject;
-            DataService.SetJsonData(Element, jsonData);
+            DataService.SetJsonData(Element, jsonData.ToString());
             ReRead();
         }
 
@@ -88,9 +90,10 @@ namespace HJ.Revit
         {
             if (!Storage.TryGetValue(name, out object value))
             {
-                var jsonData = DataService.GetJsonData(Element);
+                JObject jsonData;
                 try
                 {
+                    jsonData = JObject.Parse(DataService.GetJsonData(Element));
                     var t = jsonData[this.GetType().FullName][name].ToObject<T>(Serializer ?? JsonSerializer.CreateDefault());
                     Storage[name] = t;
                     return t;
@@ -115,7 +118,6 @@ namespace HJ.Revit
                 Save();
             }
         }
-
         public override int GetHashCode()
         {
             return _guid.GetHashCode();

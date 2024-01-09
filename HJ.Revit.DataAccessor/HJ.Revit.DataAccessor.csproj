@@ -107,7 +107,7 @@
 		<PackageProjectUrl>https://github.com/zhanhuajie/HJ.Revit.DataAccessor</PackageProjectUrl>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="*" />
 		<PackageReference Include="Revit_All_Main_Versions_API_x64" Version="$(RevitVersion).*">
 			<ExcludeAssets>runtime</ExcludeAssets>
 		</PackageReference>
