@@ -16,9 +16,9 @@ namespace HJ.Revit
                 if (_shcema == null)
                 {
                     var builder = new SchemaBuilder(new Guid("{773DDF50-BB10-4CE7-A447-271BA46C8214}"));
-                    builder.SetSchemaName("Revit.DataAccessor");
+                    builder.SetSchemaName("Revit_DataAccessor");
                     builder.SetApplicationGUID(new Guid("{198247C7-51EA-490F-B0EC-C1A5CEFEBF58}"));
-                    builder.SetVendorId("Revit.DataAccessor");
+                    builder.SetVendorId("Revit_DataAccessor");
                     builder.SetReadAccessLevel(AccessLevel.Public);
                     builder.SetWriteAccessLevel(AccessLevel.Public);
                     builder.SetDocumentation("Revit.DataAccessor Storge");

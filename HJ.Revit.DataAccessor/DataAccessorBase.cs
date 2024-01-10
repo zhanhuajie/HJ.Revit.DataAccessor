@@ -7,21 +7,21 @@ namespace HJ.Revit
 {
     public abstract class DataAccessorBase
     {
-        private static readonly Dictionary<Guid, Dictionary<string, object>> _globalStorage = new();
+        private static readonly Dictionary<Guid, Dictionary<string, object>> _globalCache = new();
         private static readonly Dictionary<Guid, int> _counter = new();
 
         private readonly Guid _guid;
         readonly Document _document;
         readonly ElementId _elementId;
         private Element Element => _document.GetElement(_elementId) ?? throw new InvalidOperationException("Element is not valid");
-        private Dictionary<string, object> Storage
+        private Dictionary<string, object> Cache
         {
             get
             {
-                if (!_globalStorage.TryGetValue(_guid, out var storage))
+                if (!_globalCache.TryGetValue(_guid, out var storage))
                 {
                     storage = new();
-                    _globalStorage.Add(_guid, storage);
+                    _globalCache.Add(_guid, storage);
                 }
                 return storage;
             }
@@ -34,7 +34,7 @@ namespace HJ.Revit
         {
             _document = elem?.Document ?? throw new ArgumentNullException(nameof(elem));
             _elementId = elem.Id;
-            _guid = elem.GetGuid().Xor(this.GetType().GUID);
+            _guid = elem.GetGuid().Xor(Guid.Parse(MD5Helper.GetMD5Hash(this.GetType().FullName)));
             if (_counter.TryGetValue(_guid, out var count))
             {
                 _counter[_guid] = count + 1;
@@ -51,7 +51,7 @@ namespace HJ.Revit
             {
                 if (count == 1)
                 {
-                    _globalStorage.Remove(_guid);
+                    _globalCache.Remove(_guid);
                     _counter.Remove(_guid);
                 }
                 else
@@ -63,7 +63,7 @@ namespace HJ.Revit
 
         public void ReRead()
         {
-            Storage.Clear();
+            Cache.Clear();
         }
         public void Save()
         {
@@ -77,9 +77,9 @@ namespace HJ.Revit
                 jsonData = new();
             }
             var jObject = jsonData[this.GetType().FullName] as JObject ?? new();
-            foreach (var key in Storage.Keys)
+            foreach (var key in Cache.Keys)
             {
-                jObject[key] = Storage[key] == null ? null : JToken.FromObject(Storage[key], Serializer ?? JsonSerializer.CreateDefault());
+                jObject[key] = Cache[key] == null ? null : JToken.FromObject(Cache[key], Serializer ?? JsonSerializer.CreateDefault());
             }
             jsonData[this.GetType().FullName] = jObject;
             DataService.SetJsonData(Element, jsonData.ToString());
@@ -88,31 +88,31 @@ namespace HJ.Revit
 
         protected T GetValue<T>([CallerMemberName] string name = null)
         {
-            if (!Storage.TryGetValue(name, out object value))
+            try
+            {
+                return (T)Cache[name];
+            }
+            catch
             {
                 JObject jsonData;
                 try
                 {
                     jsonData = JObject.Parse(DataService.GetJsonData(Element));
                     var t = jsonData[this.GetType().FullName][name].ToObject<T>(Serializer ?? JsonSerializer.CreateDefault());
-                    Storage[name] = t;
+                    Cache[name] = t;
                     return t;
                 }
                 catch
                 {
-                    Storage[name] = default;
+                    Cache[name] = default;
                     return default;
                 }
-            }
-            else
-            {
-                return (T)value;
             }
         }
 
         protected void SetValue<T>(T value, [CallerMemberName] string name = null)
         {
-            Storage[name] = value;
+            Cache[name] = value;
             if (AutoSave)
             {
                 Save();
