@@ -2,7 +2,7 @@
 <package >
 	<metadata>
 		<id>HJ.Revit.DataAccessor</id>
-		<version>1.0.4</version>
+		<version>1.0.5</version>
 		<title>HJ.Revit.DataAccessor</title>
 		<authors>ZhanHuajie</authors>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
