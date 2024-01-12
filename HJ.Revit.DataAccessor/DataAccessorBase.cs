@@ -26,7 +26,7 @@ namespace HJ.Revit
                 return storage;
             }
         }
-        public bool AutoSave { get; set; } = false;
+        private bool _autoSave = false;
         protected virtual IJsonDataService DataService { get; } = new EntityDataService();
         protected virtual JsonSerializer Serializer { get; } = JsonSerializer.CreateDefault();
 
@@ -85,6 +85,14 @@ namespace HJ.Revit
             DataService.SetJsonData(Element, jsonData.ToString());
             ReRead();
         }
+        public void SetAutoSave(bool autoSave)
+        {
+            _autoSave = autoSave;
+        }
+        public bool IsAutoSave()
+        {
+            return _autoSave;
+        }
 
         protected T GetValue<T>([CallerMemberName] string name = null)
         {
@@ -112,7 +120,7 @@ namespace HJ.Revit
         protected void SetValue<T>(T value, [CallerMemberName] string name = null)
         {
             Cache[name] = value;
-            if (AutoSave)
+            if (_autoSave)
             {
                 Save();
             }
