@@ -104,7 +104,6 @@ namespace HJ.Revit
                 }
                 catch
                 {
-                    Cache[name] = default;
                     return default;
                 }
             }
