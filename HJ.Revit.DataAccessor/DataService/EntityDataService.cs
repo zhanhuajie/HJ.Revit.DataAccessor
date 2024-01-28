@@ -2,6 +2,8 @@
 
 using Newtonsoft.Json.Linq;
 
+using System.Diagnostics;
+
 
 namespace HJ.Revit
 {
@@ -53,20 +55,16 @@ namespace HJ.Revit
         /// <exception cref="Exception"></exception>
         public string GetJsonData(Element elem)
         {
-            // Check arguments
             _ = elem ?? throw new ArgumentNullException(nameof(elem));
-
-            // Get entity
+            var callerClassName = GetCallerClassName();
             var entity = elem.GetEntity(Schema);
-            // Check entity
             if (!entity.IsValid())
             {
                 return null;
             }
-            // Get json data
             try
             {
-                return entity.Get<string>("Data");
+                return JObject.Parse(entity.Get<string>("Data"))[callerClassName].ToString();
             }
             catch
             {
@@ -76,38 +74,35 @@ namespace HJ.Revit
         public void SetJsonData(Element elem, string json)
         {
             _ = elem ?? throw new ArgumentNullException(nameof(elem));
+            var callerClassName = GetCallerClassName();
+            var entity = GetOrCreateEntity(elem, Schema);
             JObject jObject;
             try
             {
-                jObject = JObject.Parse(json);
+                jObject = JObject.Parse(entity.Get<string>("Data"));
             }
             catch
             {
-                throw new ArgumentException("JsonData is not valid");
+                jObject = [];
             }
-
-            // 标记UniqueId
-            if (jObject["UniqueId"] == null)
+            try
             {
-                jObject.AddFirst(new JProperty("UniqueId", elem.UniqueId));
+                jObject[callerClassName] = JObject.Parse(json);
             }
-            else
+            catch
             {
-                jObject["UniqueId"] = elem.UniqueId;
+                throw new ArgumentException("Invalid json string", nameof(json));
             }
-            //标记clr-type
-            if (jObject["Clr-Type"] == null)
-            {
-
-                jObject.AddFirst(new JProperty("Clr-Type", elem.GetType().FullName));
-            }
-            else
-            {
-                jObject["Clr-Type"] = elem.GetType().FullName;
-            }
-            var entity = GetOrCreateEntity(elem, Schema);
             entity.Set("Data", jObject.ToString());
             elem.SetEntity(entity);
+        }
+        private string GetCallerClassName()
+        {
+            var stackTrace = new StackTrace();
+            var stackFrame = stackTrace.GetFrame(2);  // 获取调用当前方法的方法的堆栈帧
+            var method = stackFrame.GetMethod();
+            var declaringType = method.DeclaringType;
+            return declaringType != null ? declaringType.FullName : "Unknown";
         }
     }
 }

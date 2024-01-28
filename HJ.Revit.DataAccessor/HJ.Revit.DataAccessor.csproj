@@ -122,4 +122,7 @@
 		<Using Include="System.IO" />
 		<Using Include="System.Text" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Helper\" />
+	</ItemGroup>
 </Project>
